@@ -17,7 +17,7 @@ RUN apt-get update \
   && gem install -N bundler -v 1.17.3 \
   && bundle install --deployment
 
-FROM node:12.16.1-buster-slim
+FROM node:12.16.2-buster-slim
 
 ENV LANG C.UTF-8
 ENV JAVA_HOME /usr/local/openjdk-11
@@ -39,6 +39,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && gem install -N bundler -v 1.17.3 \
   && bundle config gemfile '/rubytooling/Gemfile' \
-  && pip3 install 'awscli~=1.18.37'; \
+  && pip3 install 'awscli~=1.18.39'; \
   find "${JAVA_HOME}/lib" -name '*.so' -exec dirname '{}' ';' | sort -u > /etc/ld.so.conf.d/docker-openjdk.conf; \
 	ldconfig
