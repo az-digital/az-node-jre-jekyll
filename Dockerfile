@@ -1,4 +1,4 @@
-FROM debian:buster-20200422-slim as fulldevenv
+FROM debian:buster-20200803-slim as fulldevenv
 
 WORKDIR /build
 
@@ -14,18 +14,18 @@ RUN apt-get update \
     libc6-dev \
     zlib1g-dev \
   && rm -rf /var/lib/apt/lists/* \
-  && gem install -N bundler -v 1.17.3 \
+  && gem install -N bundler -v 2.1.4 \
   && bundle install --deployment
 
-FROM node:12.16.3-buster-slim
+FROM node:12.18.3-buster-slim
 
 ENV LANG C.UTF-8
 ENV JAVA_HOME /usr/local/openjdk-11
 ENV PATH ${JAVA_HOME}/bin:${PATH}
 
 COPY --from=fulldevenv /build /rubytooling/
-COPY --from=openjdk:11.0.7-jre-slim-buster "$JAVA_HOME" "$JAVA_HOME"
-COPY --from=openjdk:11.0.7-jre-slim-buster /etc/ca-certificates/update.d/docker-openjdk /etc/ca-certificates/update.d/docker-openjdk
+COPY --from=openjdk:11.0.8-jre-slim-buster "$JAVA_HOME" "$JAVA_HOME"
+COPY --from=openjdk:11.0.8-jre-slim-buster /etc/ca-certificates/update.d/docker-openjdk /etc/ca-certificates/update.d/docker-openjdk
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
@@ -37,8 +37,8 @@ RUN apt-get update \
     python3-wheel \
     ruby \
   && rm -rf /var/lib/apt/lists/* \
-  && gem install -N bundler -v 1.17.3 \
+  && gem install -N bundler -v 2.1.4 \
   && bundle config gemfile '/rubytooling/Gemfile' \
-  && pip3 install 'awscli~=1.18.51'; \
+  && pip3 install 'awscli~=1.18.115'; \
   find "${JAVA_HOME}/lib" -name '*.so' -exec dirname '{}' ';' | sort -u > /etc/ld.so.conf.d/docker-openjdk.conf; \
 	ldconfig
