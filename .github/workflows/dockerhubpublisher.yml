@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-      - run: echo "::set-env name=DOCKER_REPOSITORY::${GITHUB_REPOSITORY##*/}"
+      - run: echo "DOCKER_REPOSITORY=${GITHUB_REPOSITORY##*/}" >> ${GITHUB_ENV}
       - uses: docker/build-push-action@e5e36c4a4e2085c523c6fb6a553b8d00c30c1716
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
